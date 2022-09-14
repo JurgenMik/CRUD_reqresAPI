@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import CreateUser from "./components/CreateUser";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import EditUser from "./components/EditUser";
 import axios from "axios";
 
@@ -27,6 +27,11 @@ function App() {
             .then(response => {
               setUsers(users.concat(response.data.data));
             })
+      }
+
+      const handleDeleteUser = (e : React.MouseEvent<HTMLButtonElement>, data : userData) => {
+          axios.delete(`https://reqres.in/api/users/${data.id}`)
+              .then(response => console.log(response.data));
       }
 
       const handleCreateUser = () => {
@@ -77,6 +82,10 @@ function App() {
                         <button onClick={e => handleEditUser(e, data)} className="inline-block mr-4 px-4 p-1 rounded bg-blue-600 text-md mt-6 text-indigo-50">
                             <FaEdit className="inline"/>
                             Edit
+                        </button>
+                        <button onClick={e => handleDeleteUser(e, data)} className="inline-block mr-4 px-4 p-1 rounded bg-red-600 text-md mt-6 text-indigo-50">
+                            <FaTrash className="inline"/>
+                            Delete
                         </button>
                     </tr>
                 </tbody>
