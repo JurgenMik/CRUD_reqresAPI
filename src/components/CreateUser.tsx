@@ -1,8 +1,5 @@
 import React from 'react';
 import axios from "axios";
-import {
-    FormEventHandler
-} from "../../../../../../Program Files/JetBrains/IntelliJ IDEA 2021.3.3/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/react";
 
 function CreateUser( { removeModal } : any) {
 
@@ -19,7 +16,6 @@ function CreateUser( { removeModal } : any) {
         last_name: '',
         avatar: '',
     })
-    const [posts, setPosts] = React.useState<newUserData[]>([]);
 
     const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
         setNewUser({...newUser, [e.target.name] : e.target.value})
