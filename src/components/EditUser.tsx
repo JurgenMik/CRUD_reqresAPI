@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-function EditUser( { editUser, removeModal } : any) {
+function EditUser( { editUser, removeModal, setUsers, users } : any) {
 
     interface editerUserData{
         first_name: string,
@@ -24,14 +24,27 @@ function EditUser( { editUser, removeModal } : any) {
     const handlePUT = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         axios.put<editerUserData>(`https://reqres.in/api/users/${editUser.id}`,
-            {editedUser},
+            {
+                email: editedUser.email,
+                first_name: editedUser.first_name,
+                last_name: editedUser.last_name,
+                avatar: editedUser.avatar,
+            },
             {
                 headers: {
                     'Content-type': 'application/json',
                     Accept: 'application/json',
                 },
             },
-        ).then(response => console.log(response.data));
+        ).then(response => users.map((user: any, index: any) => {
+            if (user.id === editUser.id) {
+                setUsers(users.filter((user : any) => user.id !== editUser.id).concat({...user,
+                    first_name: response.data.first_name,
+                    last_name: response.data.last_name,
+                    avatar: response.data.avatar,
+                    email: response.data.email}));
+            }
+        }))
     }
 
     return(

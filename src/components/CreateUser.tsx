@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from "axios";
 
-function CreateUser( { removeModal } : any) {
+function CreateUser( { removeModal, setUsers, users } : any) {
 
     interface newUserData {
         first_name: string,
@@ -24,14 +24,18 @@ function CreateUser( { removeModal } : any) {
     const handlePOST = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         axios.post<newUserData>("https://reqres.in/api/users",
-            {newUser},
+            {
+                email: newUser.email,
+                first_name: newUser.first_name,
+                last_name: newUser.last_name,
+                avatar: newUser.avatar},
             {
                 headers: {
                     'Content-type': 'application/json',
                     Accept: 'application/json',
                 },
             },
-        ).then(response => console.log(JSON.stringify(response.data)));
+        ).then(response => setUsers(users.concat(response.data)));
     }
 
     return(

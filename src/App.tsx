@@ -31,7 +31,7 @@ function App() {
 
       const handleDeleteUser = (e : React.MouseEvent<HTMLButtonElement>, data : userData) => {
           axios.delete(`https://reqres.in/api/users/${data.id}`)
-              .then(response => console.log(response.data));
+              .then(response => setUsers(users.filter((user : any) => user.id !== data.id)));
       }
 
       const handleCreateUser = () => {
@@ -55,8 +55,8 @@ function App() {
       <div className="h-screen w-full">
         <div className="w-2/3 h-full flex items-center justify-center m-auto overflow-x-auto overflow-y-auto relative shadow-md sm:rounded-lg">
           <table className="w-full align-center text-center text-lg text-left text-gray-500 justify-center mb-20">
-              {create === 'create' ? <CreateUser removeModal={removeModal}/> : null}
-              {edit === 'edit' ? <EditUser removeModal={removeEditModal} editUser={editUser}/> : null}
+              {create === 'create' ? <CreateUser removeModal={removeModal} setUsers={setUsers} users={users} /> : null}
+              {edit === 'edit' ? <EditUser removeModal={removeEditModal} editUser={editUser} setUsers={setUsers} users={users} /> : null}
             <thead className="text-xs text-gray-800 uppercase bg-gray-50">
                 <tr>
                     <th className="py-10 px-6 text-xl">Id</th>
