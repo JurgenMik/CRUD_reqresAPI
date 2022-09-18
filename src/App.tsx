@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import CreateUser from "./components/CreateUser";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaSort } from "react-icons/fa";
 import EditUser from "./components/EditUser";
 import axios from "axios";
 
@@ -16,10 +16,10 @@ function App() {
       const [users, setUsers] = React.useState<userData[]>([]);
       const [create, setCreate] = React.useState<string>('');
       const [edit , setEdit] = React.useState<string>('');
-      const [editUser, setEditUser] = React.useState<userData>()
+      const [editUser, setEditUser] = React.useState<userData>();
 
       useEffect(() => {
-        handleGET();
+       handleGET();
       }, []);
 
       const handleGET = () => {
@@ -43,6 +43,11 @@ function App() {
           setEdit('edit');
       }
 
+      const handleSort = (e : React.MouseEvent<HTMLTableCellElement>) => {
+          const sortUsers = users.sort((a, b) => a.id - b.id);
+          setUsers(users.slice(users.length).concat(sortUsers))
+      }
+
       const removeModal = () => {
           setCreate('');
       }
@@ -59,7 +64,7 @@ function App() {
               {edit === 'edit' ? <EditUser removeModal={removeEditModal} editUser={editUser} setUsers={setUsers} users={users} /> : null}
             <thead className="text-xs text-gray-800 uppercase bg-gray-50">
                 <tr>
-                    <th className="py-10 px-6 text-xl">Id</th>
+                    <th className="py-10 px-6 text-xl" onClick={handleSort}><FaSort className="inline-block mr-2"/>Id</th>
                     <th className="py-10 px-6 text-xl">First_name</th>
                     <th className="py-10 px-6 text-xl">Last_name</th>
                     <th className="py-10 px-6 text-xl">Avatar</th>
