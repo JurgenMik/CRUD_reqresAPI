@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, {useEffect} from 'react';
 import CreateUser from "./components/CreateUser";
 import { FaEdit, FaTrash, FaSort } from "react-icons/fa";
 import EditUser from "./components/EditUser";
@@ -19,13 +19,18 @@ function App() {
       const [editUser, setEditUser] = React.useState<userData>();
 
       useEffect(() => {
-       handleGET();
+          if (localStorage.getItem('users') === null) {
+                handleGET();
+          } else {
+             setUsers(users.concat(JSON.parse(localStorage.getItem('users') || "")));
+          }
       }, []);
 
       const handleGET = () => {
         axios.get("https://reqres.in/api/users")
             .then(response => {
               setUsers(users.concat(response.data.data));
+              localStorage.setItem('users', JSON.stringify(response.data.data));
             })
       }
 
