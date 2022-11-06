@@ -23,7 +23,7 @@ function EditUser( { editUser, removeModal, setUsers, users } : any) {
 
     const handlePUT = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        axios.put<editerUserData>(`https://reqres.in/api/users/${editUser.id}`,
+        axios.put<editerUserData>(`http://localhost:3002/api/users/${editUser._id}`,
             {
                 email: editedUser.email,
                 first_name: editedUser.first_name,
@@ -37,8 +37,8 @@ function EditUser( { editUser, removeModal, setUsers, users } : any) {
                 },
             },
         ).then(response => users.map((user: any, index: any) => {
-            if (user.id === editUser.id) {
-                setUsers(users.filter((user : any) => user.id !== editUser.id).concat({...user,
+            if (user._id === editUser._id) {
+                setUsers(users.filter((user : any) => user._id !== editUser._id).concat({...user,
                     first_name: response.data.first_name,
                     last_name: response.data.last_name,
                     avatar: response.data.avatar,

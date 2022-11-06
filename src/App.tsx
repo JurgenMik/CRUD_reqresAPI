@@ -8,6 +8,7 @@ function App() {
 
     interface userData {
         id: number,
+        _id: number,
         first_name: string,
         last_name: string,
         avatar: string,
@@ -27,16 +28,16 @@ function App() {
     }, []);
 
     const handleGET = () => {
-        axios.get("https://reqres.in/api/users")
+        axios.get("http://localhost:3002/api/users")
             .then(response => {
-                setUsers(users.concat(response.data.data));
-                localStorage.setItem('users', JSON.stringify(response.data.data));
+                setUsers(users.concat(response.data.users));
+                localStorage.setItem('users', JSON.stringify(response.data.users));
             })
     }
 
     const handleDeleteUser = (e: React.MouseEvent<HTMLButtonElement>, data: userData) => {
-        axios.delete(`https://reqres.in/api/users/${data.id}`)
-            .then(response => setUsers(users.filter((user: any) => user.id !== data.id)));
+        axios.delete(`http://localhost:3002/api/users/${data._id}`)
+            .then(response => setUsers(users.filter((user: any) => user._id !== data._id)));
     }
 
     const handleCreateUser = () => {

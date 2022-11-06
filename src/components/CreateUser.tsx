@@ -23,7 +23,7 @@ function CreateUser( { removeModal, setUsers, users } : any) {
 
     const handlePOST = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        axios.post<newUserData>("https://reqres.in/api/users",
+        axios.post<newUserData>("http://localhost:3002/api/users",
             {
                 email: newUser.email,
                 first_name: newUser.first_name,
