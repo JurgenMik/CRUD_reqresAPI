@@ -20,18 +20,13 @@ function App() {
     const [editUser, setEditUser] = React.useState<userData>();
 
     useEffect(() => {
-        if (localStorage.getItem('users') === null) {
-            handleGET();
-        } else {
-            setUsers(users.concat(JSON.parse(localStorage.getItem('users') || "")));
-        }
-    }, []);
+        handleGET();
+    }, [users]);
 
     const handleGET = () => {
         axios.get("http://localhost:3002/api/users")
             .then(response => {
-                setUsers(users.concat(response.data.users));
-                localStorage.setItem('users', JSON.stringify(response.data.users));
+                setUsers(response.data.users);
             })
     }
 
