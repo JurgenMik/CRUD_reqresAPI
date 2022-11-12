@@ -1,4 +1,4 @@
-Example of a CRUD project with reqres API
+Example of a CRUD project with reqres API & api clone https://github.com/JurgenMik/nodejs_REST
 
 https://www.pivotaltracker.com/n/projects/2595092
 ## Table of Contents
@@ -23,4 +23,6 @@ https://www.pivotaltracker.com/n/projects/2595092
 * <strong>React</strong>
 * <strong>TypeScript</strong>
 * <strong>Reqres API </strong>
+* <strong>Mongodb & Nodejs</strong>
+* <strong>Socket.io</strong>
 * <strong>TailwindCSS - CSS framework</strong>

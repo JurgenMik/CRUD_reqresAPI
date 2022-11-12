@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 
-function EditUser( { editUser, removeModal, setUsers, users } : any) {
+function EditUser( { socket, editUser, removeModal, setUsers, users } : any) {
 
     interface editerUserData{
+        _id: number,
         first_name: string,
         last_name: string,
         email: string,
@@ -11,6 +12,7 @@ function EditUser( { editUser, removeModal, setUsers, users } : any) {
     }
 
     const [editedUser, setEdited] = React.useState<editerUserData>({
+        _id: editUser._id,
         email: editUser.email,
         first_name: editUser.first_name,
         last_name: editUser.last_name,
@@ -23,6 +25,7 @@ function EditUser( { editUser, removeModal, setUsers, users } : any) {
 
     const handlePUT = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        /*
         axios.put<editerUserData>(`http://localhost:3002/api/users/${editUser._id}`,
             {
                 email: editedUser.email,
@@ -45,6 +48,9 @@ function EditUser( { editUser, removeModal, setUsers, users } : any) {
                     email: response.data.email}));
             }
         }))
+
+         */
+        socket.emit('update/user', editedUser)
     }
 
     return(
