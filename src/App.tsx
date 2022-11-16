@@ -14,16 +14,22 @@ function App() {
         last_name: string,
         avatar: string,
     }
+
+    // @ts-ignore
+    const socket = io.connect("http://localhost:3002", {reconnection: false});
+
     const [users, setUsers] = React.useState<userData[]>([]);
     const [create, setCreate] = React.useState<string>('');
     const [edit , setEdit] = React.useState<string>('');
     const [editUser, setEditUser] = React.useState<userData>();
 
-    // @ts-ignore
-    const socket = io.connect("http://localhost:3002")
-
     useEffect(() => {
-        handleGET();
+        if (!socket.connected) {
+            setUsers(JSON.parse(localStorage.getItem('users') || ""));
+        }
+        socket.on("connect", () => {
+           handleGET();
+        });
     }, []);
 
     const handleGET = () => {
@@ -35,10 +41,9 @@ function App() {
          */
         socket.emit('get/users');
         socket.on('get/users', (data : any) => {
-            setUsers(data)
+            setUsers(data);
+            localStorage.setItem('users', JSON.stringify(data));
         });
-
-        //return () => socket.disconnect();
     }
 
     const handleDeleteUser = (e : React.MouseEvent<HTMLButtonElement>, data : userData) => {
@@ -49,7 +54,7 @@ function App() {
             })
 
          */
-        socket.emit('delete/user', data._id)
+        socket.emit('delete/user', data._id);
     }
 
     const handleCreateUser = () => {
@@ -63,7 +68,7 @@ function App() {
 
     const handleSort = (e : React.MouseEvent<HTMLTableCellElement>) => {
         const sortUsers = users.sort((a, b) => a.id - b.id);
-        setUsers(users.slice(users.length).concat(sortUsers))
+        setUsers(users.slice(users.length).concat(sortUsers));
     }
 
     const removeModal = () => {
