@@ -2,25 +2,17 @@ import React, {useEffect} from 'react';
 import CreateUser from "./components/CreateUser";
 import { FaEdit, FaTrash, FaSort } from "react-icons/fa";
 import EditUser from "./components/EditUser";
-import axios from "axios";
 import io from "socket.io-client";
+import { userData } from './interfaces/Users';
 
 function App() {
 
-    interface userData {
-        id: number,
-        _id: number,
-        first_name: string,
-        last_name: string,
-        avatar: string,
-    }
-
     // @ts-ignore
-    const socket = io.connect("http://localhost:3002", {reconnection: false});
+    const socket = io.connect(process.env.REACT_APP_SOCKET_LOCATION, {reconnection: false});
 
     const [users, setUsers] = React.useState<userData[]>([]);
-    const [create, setCreate] = React.useState<string>('');
-    const [edit , setEdit] = React.useState<string>('');
+    const [create, setCreate] = React.useState<boolean>(false);
+    const [edit, setEdit] = React.useState<boolean>(false);
     const [editUser, setEditUser] = React.useState<userData>();
 
     useEffect(() => {
@@ -33,12 +25,6 @@ function App() {
     }, []);
 
     const handleGET = () => {
-        /*
-        axios.get("http://localhost:3002/api/users")
-            .then(response => {
-                setUsers(response.data.users);
-            })
-         */
         socket.emit('get/users');
         socket.on('get/users', (data : any) => {
             setUsers(data);
@@ -46,55 +32,50 @@ function App() {
         });
     }
 
-    const handleDeleteUser = (e : React.MouseEvent<HTMLButtonElement>, data : userData) => {
-        /*
-        axios.delete(`http://localhost:3002/api/users/${data._id}`)
-            .then(response => {
-                setUsers(users.filter((user : any) => user._id !== data._id));
-            })
-
-         */
+    const handleDeleteUser = (e : React.MouseEvent<HTMLTableCellElement>, data : userData) => {
         socket.emit('delete/user', data._id);
     }
 
     const handleCreateUser = () => {
-        setCreate('create');
+        setCreate(!create);
     }
 
-    const handleEditUser = (e : React.MouseEvent<HTMLButtonElement>, data : userData) => {
+    const handleEditUser = (e : React.MouseEvent<HTMLTableCellElement>, data : userData) => {
         setEditUser(data);
-        setEdit('edit');
+        setEdit(!edit);
     }
 
     const handleSort = (e : React.MouseEvent<HTMLTableCellElement>) => {
-        const sortUsers = users.sort((a, b) => a.id - b.id);
+        const sortUsers = users.sort((a, b) => a._id - b._id);
         setUsers(users.slice(users.length).concat(sortUsers));
     }
 
-    const removeModal = () => {
-        setCreate('');
+    const closeCreateModal = () => {
+        setCreate(!create);
     }
 
-    const removeEditModal = () => {
-        setEdit('');
+    const closeEditModal = () => {
+        setEdit(!edit);
     }
 
     return (
         <div className="h-screen w-full">
             <div className="w-2/3 h-full flex items-center justify-center m-auto overflow-x-auto overflow-y-auto relative shadow-md sm:rounded-lg">
                 <table className="w-full align-center text-center text-lg text-left text-gray-500 justify-center mb-20">
-                    {create === 'create' ? <CreateUser socket={socket} removeModal={removeModal} setUsers={setUsers} users={users} /> : null}
-                    {edit === 'edit' ? <EditUser socket={socket} removeModal={removeEditModal} editUser={editUser} setUsers={setUsers} users={users} /> : null}
+                    {create ? <CreateUser socket={socket} removeModal={closeCreateModal} setUsers={setUsers} users={users} /> : null}
+                    {edit ? <EditUser socket={socket} removeModal={closeEditModal} editUser={editUser} setUsers={setUsers} users={users} /> : null}
                     <thead className="text-xs text-gray-800 uppercase bg-gray-50">
                     <tr>
-                        <th className="py-10 px-6 text-xl" onClick={handleSort}><FaSort className="inline-block mr-2"/>Id</th>
+                        <th className="py-10 px-6 text-xl" onClick={handleSort}><FaSort className="inline-block mr-2" />
+                            Id
+                        </th>
                         <th className="py-10 px-6 text-xl">First_name</th>
                         <th className="py-10 px-6 text-xl">Last_name</th>
                         <th className="py-10 px-6 text-xl">Avatar</th>
                         <th className="py-10 px-6 text-xl">Action</th>
                     </tr>
                     </thead>
-                    {users.map((data : any, index : number) => {
+                    {users.map((data : any) => {
                         return (
                             <tbody key={data._id}>
                             <tr className="bg-white border-b">
@@ -107,14 +88,14 @@ function App() {
                                          alt="profile"
                                     />
                                 </td>
-                                <button onClick={e => handleEditUser(e, data)} className="inline-block mr-4 px-4 p-1 rounded bg-blue-600 text-md mt-6 text-indigo-50">
-                                    <FaEdit className="inline"/>
+                                <td onClick={e => handleEditUser(e, data)} className="inline-block mr-4 px-4 p-1 rounded bg-blue-600 text-md mt-6 text-indigo-50">
+                                    <FaEdit className="inline" />
                                     Edit
-                                </button>
-                                <button onClick={e => handleDeleteUser(e, data)} className="inline-block mr-4 px-4 p-1 rounded bg-red-600 text-md mt-6 text-indigo-50">
-                                    <FaTrash className="inline"/>
+                                </td>
+                                <td onClick={e => handleDeleteUser(e, data)} className="inline-block mr-4 px-4 p-1 rounded bg-red-600 text-md mt-6 text-indigo-50">
+                                    <FaTrash className="inline" />
                                     Delete
-                                </button>
+                                </td>
                             </tr>
                             </tbody>
                         )

@@ -1,15 +1,7 @@
 import React from 'react';
-import axios from 'axios';
+import { editerUserData } from '../interfaces/Users';
 
 function EditUser( { socket, editUser, removeModal, setUsers, users } : any) {
-
-    interface editerUserData{
-        _id: number,
-        first_name: string,
-        last_name: string,
-        email: string,
-        avatar: string,
-    }
 
     const [editedUser, setEdited] = React.useState<editerUserData>({
         _id: editUser._id,
@@ -25,32 +17,7 @@ function EditUser( { socket, editUser, removeModal, setUsers, users } : any) {
 
     const handlePUT = (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        /*
-        axios.put<editerUserData>(`http://localhost:3002/api/users/${editUser._id}`,
-            {
-                email: editedUser.email,
-                first_name: editedUser.first_name,
-                last_name: editedUser.last_name,
-                avatar: editedUser.avatar,
-            },
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    Accept: 'application/json',
-                },
-            },
-        ).then(response => users.map((user: any, index: any) => {
-            if (user._id === editUser._id) {
-                setUsers(users.filter((user : any) => user._id !== editUser._id).concat({...user,
-                    first_name: response.data.first_name,
-                    last_name: response.data.last_name,
-                    avatar: response.data.avatar,
-                    email: response.data.email}));
-            }
-        }))
-
-         */
-        socket.emit('update/user', editedUser)
+        socket.emit('update/user', editedUser);
     }
 
     return(
