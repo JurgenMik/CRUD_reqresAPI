@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import CreateUser from "./components/CreateUser";
-import { FaEdit, FaTrash, FaSort } from "react-icons/fa";
+import { FaEdit, FaTrash, FaSort, FaServer } from "react-icons/fa";
 import EditUser from "./components/EditUser";
+import ServerLogs from "./components/ServerLogs";
 import io from "socket.io-client";
 import { userData } from './interfaces/Users';
 
@@ -14,6 +15,7 @@ function App() {
     const [create, setCreate] = React.useState<boolean>(false);
     const [edit, setEdit] = React.useState<boolean>(false);
     const [editUser, setEditUser] = React.useState<userData>();
+    const [viewLogs, setViewLogs] = React.useState<boolean>(false);
 
     useEffect(() => {
         if (!socket.connected) {
@@ -58,9 +60,14 @@ function App() {
         setEdit(!edit);
     }
 
+    const handleServerLog = () => {
+        setViewLogs(true);
+    }
+
     return (
         <div className="h-screen w-full">
-            <div className="w-2/3 h-full flex items-center justify-center m-auto overflow-x-auto overflow-y-auto relative shadow-md sm:rounded-lg">
+            {viewLogs ? <ServerLogs setViewLogs={setViewLogs} /> :
+            <div className="w-2/3 h-full flex flex-col justify-center m-auto overflow-x-auto overflow-y-auto relative shadow-md sm:rounded-lg">
                 <table className="w-full align-center text-center text-lg text-left text-gray-500 justify-center mb-20">
                     {create ? <CreateUser socket={socket} removeModal={closeCreateModal} setUsers={setUsers} users={users} /> : null}
                     {edit ? <EditUser socket={socket} removeModal={closeEditModal} editUser={editUser} setUsers={setUsers} users={users} /> : null}
@@ -101,12 +108,21 @@ function App() {
                         )
                     })}
                 </table>
-                <div className="w-full xl:bottom-28 bottom-20 absolute">
-                    <button onClick={handleCreateUser} className="bg-blue-800 text-white rounded-md text-lg px-6 p-2">
-                        Create
-                    </button>
+                <div className="w-full xl:bottom-28 flex">
+                    <div className="w-4/5">
+                        <button onClick={handleCreateUser} className="bg-blue-800 text-white rounded-md text-lg px-6 p-2">
+                            Create
+                        </button>
+                    </div>
+                    <div className="w-1/5 flex space-x-6">
+                        <h1 onClick={handleServerLog} className="text-xl hover:text-gray-400">
+                            Server Logs
+                        </h1>
+                        <FaServer className="text-2xl" />
+                    </div>
                 </div>
             </div>
+            }
         </div>
     );
 }
