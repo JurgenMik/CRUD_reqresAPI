@@ -6,10 +6,10 @@ import { DataGrid } from "@mui/x-data-grid";
 function ServerLogs({setViewLogs} : any) {
 
     const columns = [
-        { field: 'timestamp', headerName: 'Date-Time', width: 250 },
+        { field: 'timestamp', headerName: 'Date-Time', width: 200 },
         { field: 'originalUrl', headerName: 'URL', width: 250 },
-        { field: 'method', headerName: 'Method', width: 250 },
-        { field: 'clientId', headerName: 'clientId', width: 200}
+        { field: 'method', headerName: 'Method', width: 100 },
+        { field: 'clientId', headerName: 'clientId', width: 400 }
     ]
     const [logs, setLogs] = useState<any>([]);
 
@@ -43,7 +43,7 @@ function ServerLogs({setViewLogs} : any) {
                 getRowId={(row : any) => row.clientId}
                 rows={logs}
                 columns={columns}
-                pageSize={4}
+                pageSize={5}
                 rowsPerPageOptions={[5]}
                 autoPageSize={false}
             />
