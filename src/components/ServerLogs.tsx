@@ -40,7 +40,7 @@ function ServerLogs({setViewLogs} : any) {
                 </h1>
             </div>
             <DataGrid
-                getRowId={(row : any) => row.clientId}
+                getRowId={(row : any) => row.clientId + row.timestamp}
                 rows={logs}
                 columns={columns}
                 pageSize={5}
