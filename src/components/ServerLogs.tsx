@@ -9,7 +9,8 @@ function ServerLogs({setViewLogs} : any) {
         { field: 'timestamp', headerName: 'Date-Time', width: 200 },
         { field: 'originalUrl', headerName: 'URL', width: 250 },
         { field: 'method', headerName: 'Method', width: 100 },
-        { field: 'clientId', headerName: 'clientId', width: 400 }
+        { field: 'clientId', headerName: 'clientId', width: 400 },
+        { field: 'data', headerName: 'Changes', width: 800 }
     ]
     const [logs, setLogs] = useState<any>([]);
 
